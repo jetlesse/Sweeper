@@ -1,14 +1,22 @@
 package apps.sweeper;
 
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.TextClock;
+import android.graphics.Color;
+
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Random;
-import java.util.Stack;
+import java.util.Deque;
+import java.util.ArrayDeque;
 
 /**
  * Created by Jordan on 2017-07-20.
+ * Original version created by Jordan on 2015-12-06.
+ * This version was made to improve efficiency, readability and extendability.
  */
 
 public class Btn {
@@ -18,18 +26,19 @@ public class Btn {
     protected static int ySquares = getYSquares();
 
     static ArrayList<Btn> minePlacements = new ArrayList<>(boardSize());
-    static ArrayList<Boolean> visited = new ArrayList<>(boardSize());
-    static ArrayList<Btn> currPath = new ArrayList<>(boardSize());
     static ArrayList<Integer> buttons = new ArrayList<>(boardSize());
+    static ArrayList<Button> buttonNums = new ArrayList<>(boardSize());
 
     static int gameState = 0;
-    static TextView t;
+    protected TextView tv;
 
-    public Btn(int a) {
+    public Btn(int a, TextView tView, Timer t) {
         numMines = 0;
         state = 0;
         isMine = false;
         place = a;
+        tv = tView;
+        timer = t;
     }
 
     protected int numMines;
@@ -38,6 +47,8 @@ public class Btn {
     private int state;
     protected boolean isMine;
     protected int place;
+
+    protected Timer timer;
 
     public int getNumMines() { return numMines; }
     public boolean getIsMine() { return isMine; }
@@ -59,7 +70,7 @@ public class Btn {
         return 9;
     }
 
-    // categorize the position of the square
+    // categorize the position of the current square
     // 5 1 6    top corners, top edge
     // 3 9 4    left/right edge, middle section
     // 7 2 8    bottom corners, bottom edge
@@ -140,25 +151,26 @@ public class Btn {
 
 
     private void btnReset (int a) {
+        // TODO remove the button's text and set the background to the blank background.
         minePlacements.get(a).numMines = 0;
         minePlacements.get(a).setIsMine(false);
         minePlacements.get(a).setState(0);
     }
 
     // reset the board (reset the values of all the buttons) and place the mines.
-    // This should only be called when clicking to start a new game.
-    // no: the index of the square the board is being reset from (the 3x3 around it may not have any mines).
+    // this should only be called when clicking to start a new game.
+    // place is used as the index of the square the board is being reset from (the 3x3 around it may not have any mines).
     // totalMines: the number of mines to place, can be configurable in the future to be more (check settings).
-    private static void setBoard (int no, int totalMines) {
+    private void setBoard (int totalMines) {
 
         for (int i = 0 ; i < totalMines ; i++) {
             Random ranNum = new Random();
             boolean cont = true;
             while (cont) {
                 int point = (int) (ranNum.nextFloat() * boardSize());
-                if (point == no) { continue; }
+                if (point == place) { continue; }
                 boolean adj = false;
-                for (int index: minePlacements.get(no).getAdjIndex()) {
+                for (int index: minePlacements.get(place).getAdjIndex()) {
                     if (point == index) { adj = true; }
                 }
                 if (adj) { continue; }
@@ -183,10 +195,126 @@ public class Btn {
 
     // set the board and states for the start of the game.
     protected void startGame() {
-        setBoard(place, 10);
+        // TODO get the total number of mines from the settings.
+        setBoard(10);
         gameState = 1;
         for (int i = 0 ; i < boardSize() ; i++) {
             minePlacements.get(i).setMineNums();
+        }
+    }
+
+    protected void endGame() {
+        // TODO get the statistics from shared preferences and add recent game's data.
+        int time = timer.getTheTime();
+
+        for (int i = 0 ; i < boardSize() ; i++) {
+            btnReset(i);
+        }
+        timer.setTheTime (0);
+        timer.tView.setText("0");
+        gameState = 0;
+    }
+
+    protected boolean checkW() {
+        for (int i = 0 ; i < boardSize() ; i++) {
+            if (!minePlacements.get(i).getIsMine()) {
+                if (minePlacements.get(i).state == 0 || minePlacements.get(i).state == 1) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    // entrypoint from activity to the Btn class.
+    public void clicked() {
+        if (gameState == 0) {
+            startGame();
+        }
+
+        if (gameState == 1) {
+            chosen();
+
+            if (checkW()) {
+                tv.setText("You Won!");
+                timer.stopTimer();
+                gameState = 2;
+            }
+        }
+        else if (gameState == 2) {
+            endGame();
+        }
+    }
+
+    // entrypoint from activity to the Btn class.
+    // only changes the background of the selected button between flagged and not.
+    public void held() {
+        if (gameState == 1) {
+            if (state == 0) {
+                state = 1;
+                System.out.println("btn state: " + state);
+//                buttonNums.get(place).setBackgroundResource(R.drawable.flag_background);
+            } else if (state == 1) {
+                state = 0;
+                System.out.println("btn state: " + state);
+//                buttonNums.get(place).setBackgroundResource(R.drawable.button_background);
+            }
+        }
+    }
+
+    // more in depth processing of the interactions between between buttons and the overall game.
+    public void chosen() {
+        if (state == 0) {
+            // set background to clicked background.
+            if (isMine) {
+                buttonNums.get (place).setTextColor (Color.parseColor ("#000000"));
+                buttonNums.get(place).setText("lose");
+                tv.setText("You lost. Play again?");
+                System.out.println("lost");
+                timer.stopTimer();
+                state = 3;
+                gameState = 2;
+                return;
+            }
+            state = 2;
+
+            if (numMines == 0) {
+                // DFS. mark is state being 0, i.e. being blank
+                for (int index: getAdjIndex()) {
+                    if (minePlacements.get(index).getState() == 0) {
+                        minePlacements.get(index).chosen();
+                    }
+                }
+                return;
+            }
+
+            switch (numMines) {
+                case 1:
+                    buttonNums.get(place).setTextColor(Color.parseColor("#3170B7"));
+                    break;
+                case 2:
+                    buttonNums.get(place).setTextColor(Color.parseColor("#1E631F"));
+                    break;
+                case 3:
+                    buttonNums.get(place).setTextColor(Color.parseColor("#C10313"));
+                    break;
+                case 4:
+                    buttonNums.get(place).setTextColor(Color.parseColor("#03077A"));
+                    break;
+                case 5:
+                    buttonNums.get(place).setTextColor(Color.parseColor("#820000"));
+                    break;
+                case 6:
+                    buttonNums.get(place).setTextColor(Color.parseColor("#0EBA65"));
+                    break;
+                case 7:
+                    buttonNums.get(place).setTextColor(Color.parseColor("#FFFFFF"));
+                    break;
+                case 8:
+                    buttonNums.get(place).setTextColor(Color.parseColor("#000000"));
+                    break;
+            }
+            buttonNums.get(place).setText(String.format(Locale.getDefault(), "%d", numMines));
         }
     }
 }
