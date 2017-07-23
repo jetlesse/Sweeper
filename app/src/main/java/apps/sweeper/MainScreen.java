@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
+import android.widget.TextView;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -103,16 +104,19 @@ public class MainScreen extends AppCompatActivity {
             }
         });
 
+        TextView tView = (TextView) findViewById(R.id.gameInfo);
+        Timer timer = new Timer((TextView) findViewById(R.id.clock));
 
         GridView gridview = (GridView) findViewById(R.id.gridview);
-        gridview.setAdapter(new ImageAdapter(this));
+        gridview.setAdapter(new ImageAdapter(this, 81, tView, timer));
         gridview.setStretchMode(GridView.NO_STRETCH);
-        gridview.setNumColumns(16);
+        gridview.setNumColumns(9);
         gridview.setColumnWidth(80);
 
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
+
                 Toast.makeText(MainScreen.this, "" + position,
                         Toast.LENGTH_SHORT).show();
             }

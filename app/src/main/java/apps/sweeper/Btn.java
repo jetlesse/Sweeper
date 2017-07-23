@@ -12,6 +12,7 @@ import java.util.Locale;
 import java.util.Random;
 import java.util.Deque;
 import java.util.ArrayDeque;
+import java.util.HashMap;
 
 /**
  * Created by Jordan on 2017-07-20.
@@ -25,9 +26,9 @@ public class Btn {
     protected static int xSquares = getXSquares();
     protected static int ySquares = getYSquares();
 
-    static ArrayList<Btn> minePlacements = new ArrayList<>(boardSize());
-    static ArrayList<Integer> buttons = new ArrayList<>(boardSize());
-    static ArrayList<Button> buttonNums = new ArrayList<>(boardSize());
+    static HashMap<Integer, Btn> minePlacements = new HashMap<>(boardSize(), 1.0f);
+
+    static HashMap<Integer, Button> buttonNums = new HashMap<>(boardSize(), 1.0f);
 
     static int gameState = 0;
     protected TextView tv;
@@ -151,10 +152,19 @@ public class Btn {
 
 
     private void btnReset (int a) {
-        // TODO remove the button's text and set the background to the blank background.
+        buttonNums.get(a).setBackgroundResource (R.drawable.square);
+        buttonNums.get(a).setText ("");
         minePlacements.get(a).numMines = 0;
         minePlacements.get(a).setIsMine(false);
         minePlacements.get(a).setState(0);
+    }
+
+    public static void btnReset (Btn btn, Button b) {
+        b.setBackgroundResource (R.drawable.square);
+        b.setText ("");
+        btn.numMines = 0;
+        btn.setIsMine(false);
+        btn.setState(0);
     }
 
     // reset the board (reset the values of all the buttons) and place the mines.
@@ -254,10 +264,11 @@ public class Btn {
                 state = 1;
                 System.out.println("btn state: " + state);
 //                buttonNums.get(place).setBackgroundResource(R.drawable.flag_background);
+                buttonNums.get(place).setText ("flag");
             } else if (state == 1) {
                 state = 0;
                 System.out.println("btn state: " + state);
-//                buttonNums.get(place).setBackgroundResource(R.drawable.button_background);
+                buttonNums.get(place).setBackgroundResource(R.drawable.square);
             }
         }
     }

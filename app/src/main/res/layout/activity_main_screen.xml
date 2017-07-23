@@ -42,12 +42,32 @@
         <GridView
             android:id="@+id/gridview"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:columnWidth="40dp"
             android:adjustViewBounds="true"
             android:numColumns="16"
             android:stretchMode="columnWidth"
+            android:gravity="center"
+            android:layout_height="450sp" />
+
+        <TextView
+            android:text="TextView"
+            android:id="@+id/clock"
+            android:layout_width="35sp"
+            android:layout_height="35sp"
+            android:layout_marginLeft="20sp"
+            android:layout_marginBottom="5sp"
+            android:layout_gravity="bottom"/>
+
+        <TextView
+            android:text="TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="35sp"
+            android:id="@+id/gameInfo"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginBottom="5sp"
             android:gravity="center" />
+
+
     </FrameLayout>
 
 </FrameLayout>
