@@ -72,80 +72,68 @@ public class Btn {
     }
 
     // categorize the position of the current square
-    // 5 1 6    top corners, top edge
-    // 3 9 4    left/right edge, middle section
-    // 7 2 8    bottom corners, bottom edge
+    // 1 5 2    top corners, top edge
+    // 7 9 8    left/right edge, middle section
+    // 3 6 4    bottom corners, bottom edge
     protected int searchAround() {
-        if (place > 0 && place < xSquares - 1) {
+        System.out.println("searchSround: " + place);
+        if (place == 0) {
             return 1;
-        }
-        else if (place > xSquares * (ySquares - 1) && place < boardSize() - 1) {
+        } else if (place == xSquares - 1) {
             return 2;
-        }
-        else if (place % xSquares == 0) {
+        } else if (place == xSquares * (ySquares - 1)) {
             return 3;
-        }
-        else if (place % xSquares == xSquares - 1) {
+        } else if (place == boardSize() - 1) {
             return 4;
-        }
-        else if (place == 0) {
+        } else if (place > 0 && place < xSquares - 1) {
             return 5;
-        }
-        else if (place == xSquares - 1) {
+        } else if (place > xSquares * (ySquares - 1) && place < boardSize() - 1) {
             return 6;
-        }
-        else if (place == xSquares * (ySquares - 1)) {
+        } else if (place % xSquares == 0) {
             return 7;
-        }
-        else if (place == boardSize() - 1) {
+        } else if (place % xSquares == xSquares - 1) {
             return 8;
-        }
-        else {
+        } else {
             return 9;
         }
     }
 
     // get the indices of all the sqaures within the 3x3 of the current square.
+    // 1 5 2    top corners, top edge
+    // 7 9 8    left/right edge, middle section
+    // 3 6 4    bottom corners, bottom edge
     protected int[] getAdjIndex() {
         int buttonPlace = searchAround();
+        System.out.println("getAdjIndex: " + buttonPlace);
         if (buttonPlace == 1) {
-            int[] idArr = {place - 1, place + 1, place + xSquares - 1, place + xSquares, place + xSquares + 1};
-            return idArr;
-        }
-        else if (buttonPlace == 2) {
-            int[] idArr = {place - xSquares + 1, place - xSquares, place - xSquares - 1, place - 1, place + 1};
-            return idArr;
-        }
-        else if (buttonPlace == 3) {
-            int[] idArr = {place - xSquares + 1, place - xSquares, place + 1, place + 9, place + 10};
-            return idArr;
-        }
-        else if (buttonPlace == 4) {
-            int[] idArr = {place - xSquares - 1, place - xSquares, place - 1, place + xSquares - 1, place + xSquares};
-            return idArr;
-        }
-        else if (buttonPlace == 5) {
             int[] idArr = {place + 1, place + xSquares + 1, place + xSquares};
             return idArr;
-        }
-        else if (buttonPlace == 6) {
+        } else if (buttonPlace == 2) {
             int[] idArr = {place - 1, place + xSquares - 1, place + xSquares};
             return idArr;
-        }
-        else if (buttonPlace == 7) {
+        } else if (buttonPlace == 3) {
             int[] idArr = {place - xSquares + 1, place - xSquares, place + 1};
             return idArr;
-        }
-        else if (buttonPlace == 8) {
+        } else if (buttonPlace == 4) {
             int[] idArr = {place - xSquares - 1, place - xSquares, place - 1};
             return idArr;
-        }
-        else if (buttonPlace == 9) {
+        } else if (buttonPlace == 5) {
+            int[] idArr = {place - 1, place + 1, place + xSquares - 1, place + xSquares, place + xSquares + 1};
+            return idArr;
+        } else if (buttonPlace == 6) {
+            int[] idArr = {place - xSquares + 1, place - xSquares, place - xSquares - 1, place - 1, place + 1};
+            return idArr;
+        } else if (buttonPlace == 7) {
+            int[] idArr = {place - xSquares + 1, place - xSquares, place + 1, place + xSquares, place + xSquares + 1};
+            return idArr;
+        } else if (buttonPlace == 8) {
+            int[] idArr = {place - xSquares - 1, place - xSquares, place - 1, place + xSquares - 1, place + xSquares};
+            return idArr;
+        } else if (buttonPlace == 9) {
             int[] idArr = {place - xSquares - 1, place - xSquares, place - xSquares + 1,
                            place - 1, place + 1, place + xSquares - 1, place + xSquares, place + xSquares + 1};
             return idArr;
-        }
-        else {
+        } else {
             return null;
         }
     }
@@ -194,7 +182,9 @@ public class Btn {
     protected void setMineNums() {
         if(!getIsMine()) {
             int n = 0;
+            System.out.println("adj squares: " + getAdjIndex());
             for (int index: getAdjIndex()) {
+                System.out.println("get mine for index: " + index);
                 if (minePlacements.get(index).getIsMine()) {
                     n++;
                 }
@@ -211,6 +201,7 @@ public class Btn {
         for (int i = 0 ; i < boardSize() ; i++) {
             minePlacements.get(i).setMineNums();
         }
+        timer.startTimer();
     }
 
     protected void endGame() {
@@ -222,6 +213,7 @@ public class Btn {
         }
         timer.setTheTime (0);
         timer.tView.setText("0");
+        tv.setText("");
         gameState = 0;
     }
 
@@ -239,6 +231,7 @@ public class Btn {
     // entrypoint from activity to the Btn class.
     public void clicked() {
         if (gameState == 0) {
+            System.out.println("starting game");
             startGame();
         }
 
@@ -277,8 +270,9 @@ public class Btn {
     public void chosen() {
         if (state == 0) {
             // set background to clicked background.
+            buttonNums.get(place).setBackgroundResource(R.drawable.pushed_square);
             if (isMine) {
-                buttonNums.get (place).setTextColor (Color.parseColor ("#000000"));
+                buttonNums.get(place).setTextColor (Color.parseColor ("#000000"));
                 buttonNums.get(place).setText("lose");
                 tv.setText("You lost. Play again?");
                 System.out.println("lost");

@@ -44,14 +44,21 @@ public class ImageAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         final int pos = position;
         Button b;
-        Btn btn = new Btn (pos, tView, timer);
-        if (convertView == null) {
+        Btn btn;
+        if (Btn.buttonNums.containsKey(position)) {
+            b = Btn.buttonNums.get(position);
+            btn = Btn.minePlacements.get(position);
+        }
+        else {
+            btn = new Btn (pos, tView, timer);
             b = new Button(mContext);
             b.setLayoutParams(new GridView.LayoutParams (80, 80));
             b.setPadding(1, 1, 1, 1);
         }
-        else {
-            b = (Button) convertView;
+
+        if (position == 0) {
+            System.out.println("0 Button: " + b);
+            System.out.println("0 Btn: " + btn);
         }
 
         Btn.buttonNums.put(position, b);

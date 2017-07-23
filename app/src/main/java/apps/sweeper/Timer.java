@@ -16,6 +16,7 @@ public class Timer {
     public Timer (TextView t) {
         theTime = 0;
         tView = t;
+        t.setText("0");
     }
 
     public int getTheTime() { return theTime; }
