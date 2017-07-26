@@ -25,7 +25,6 @@ public class Timer {
     Handler h = new Handler();
     Runnable runner = new Runnable() {
         public void run() {
-//            System.out.println ("gameState = " + Btn.gameState);
             if (Btn.gameState == 1) {
                 tView.setText(String.format(Locale.getDefault(), "%d", ++theTime));
                 h.postDelayed (runner, 1000);

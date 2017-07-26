@@ -2,16 +2,11 @@ package apps.sweeper;
 
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.TextClock;
 import android.graphics.Color;
+import android.content.SharedPreferences;
 
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.HashSet;
 import java.util.Locale;
 import java.util.Random;
-import java.util.Deque;
-import java.util.ArrayDeque;
 import java.util.HashMap;
 
 /**
@@ -31,15 +26,14 @@ public class Btn {
     static HashMap<Integer, Button> buttonNums = new HashMap<>(boardSize(), 1.0f);
 
     static int gameState = 0;
-    protected TextView tv;
+    protected static TextView tv;
+    public static SharedPreferences sp;
 
-    public Btn(int a, TextView tView, Timer t) {
+    public Btn(int a) {
         numMines = 0;
         state = 0;
         isMine = false;
         place = a;
-        tv = tView;
-        timer = t;
     }
 
     protected int numMines;
@@ -49,12 +43,20 @@ public class Btn {
     protected boolean isMine;
     protected int place;
 
-    protected Timer timer;
+    public static Timer timer;
 
     public int getNumMines() { return numMines; }
     public boolean getIsMine() { return isMine; }
     public int getState() { return state; }
     public static int boardSize() { return xSquares * ySquares; }
+
+    public static void emptyObjects() {
+        minePlacements = new HashMap<>(boardSize(), 1.0f);
+        buttonNums = new HashMap<>(boardSize(), 1.0f);
+        timer = null;
+        tv = null;
+        sp = null;
+    }
 
 
     protected void setIsMine(boolean bool) { isMine = bool; }
@@ -76,7 +78,6 @@ public class Btn {
     // 7 9 8    left/right edge, middle section
     // 3 6 4    bottom corners, bottom edge
     protected int searchAround() {
-        System.out.println("searchSround: " + place);
         if (place == 0) {
             return 1;
         } else if (place == xSquares - 1) {
@@ -99,12 +100,8 @@ public class Btn {
     }
 
     // get the indices of all the sqaures within the 3x3 of the current square.
-    // 1 5 2    top corners, top edge
-    // 7 9 8    left/right edge, middle section
-    // 3 6 4    bottom corners, bottom edge
     protected int[] getAdjIndex() {
         int buttonPlace = searchAround();
-        System.out.println("getAdjIndex: " + buttonPlace);
         if (buttonPlace == 1) {
             int[] idArr = {place + 1, place + xSquares + 1, place + xSquares};
             return idArr;
@@ -182,9 +179,7 @@ public class Btn {
     protected void setMineNums() {
         if(!getIsMine()) {
             int n = 0;
-            System.out.println("adj squares: " + getAdjIndex());
             for (int index: getAdjIndex()) {
-                System.out.println("get mine for index: " + index);
                 if (minePlacements.get(index).getIsMine()) {
                     n++;
                 }
@@ -205,7 +200,6 @@ public class Btn {
     }
 
     protected void endGame() {
-        // TODO get the statistics from shared preferences and add recent game's data.
         int time = timer.getTheTime();
 
         for (int i = 0 ; i < boardSize() ; i++) {
@@ -231,7 +225,6 @@ public class Btn {
     // entrypoint from activity to the Btn class.
     public void clicked() {
         if (gameState == 0) {
-            System.out.println("starting game");
             startGame();
         }
 
@@ -242,6 +235,7 @@ public class Btn {
                 tv.setText("You Won!");
                 timer.stopTimer();
                 gameState = 2;
+                recordWin();
             }
         }
         else if (gameState == 2) {
@@ -255,12 +249,10 @@ public class Btn {
         if (gameState == 1) {
             if (state == 0) {
                 state = 1;
-                System.out.println("btn state: " + state);
 //                buttonNums.get(place).setBackgroundResource(R.drawable.flag_background);
                 buttonNums.get(place).setText ("flag");
             } else if (state == 1) {
                 state = 0;
-                System.out.println("btn state: " + state);
                 buttonNums.get(place).setBackgroundResource(R.drawable.square);
             }
         }
@@ -275,8 +267,8 @@ public class Btn {
                 buttonNums.get(place).setTextColor (Color.parseColor ("#000000"));
                 buttonNums.get(place).setText("lose");
                 tv.setText("You lost. Play again?");
-                System.out.println("lost");
                 timer.stopTimer();
+                recordGame();
                 state = 3;
                 gameState = 2;
                 return;
@@ -321,5 +313,34 @@ public class Btn {
             }
             buttonNums.get(place).setText(String.format(Locale.getDefault(), "%d", numMines));
         }
+    }
+
+    // TODO check the settings to know which values to modify.
+    // get games won and fastest game won, update with new statistics.
+    protected void recordWin() {
+        if (sp == null) {
+            System.out.println("shared preferences is not set yet.");
+            return;
+        }
+        int won = sp.getInt("Games_Won", 0);
+        int fastest = sp.getInt("Fastest_Win", 99);
+        SharedPreferences.Editor edit = sp.edit();
+        edit.putInt("Games_Won", won + 1);
+        if (timer.getTheTime() < fastest) {
+            edit.putInt("Fastest_Win", timer.getTheTime());
+        }
+        edit.apply();
+        recordGame();
+    }
+
+    protected void recordGame() {
+        if (sp == null) {
+            System.out.println("shared preferences is not set yet.");
+            return;
+        }
+        int gamesPlayed = sp.getInt("Games_Played", 0);
+        SharedPreferences.Editor edit = sp.edit();
+        edit.putInt("Games_Played", gamesPlayed + 1);
+        edit.apply();
     }
 }

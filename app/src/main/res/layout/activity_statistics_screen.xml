@@ -1,0 +1,125 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0099cc"
+    tools:context="apps.sweeper.StatisticsScreen">
+
+
+    <!-- This FrameLayout insets its children based on system windows using
+         android:fitsSystemWindows. -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
+
+        <TextView
+            android:text="Games Won:"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/gamesWonTag"
+            android:textColor="@android:color/black"
+            android:layout_marginLeft="5sp"
+            android:layout_marginTop="15sp"
+            android:gravity="left" />
+
+        <TextView
+            android:text="Games Played:"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/GamesPlayedTag"
+            android:textColor="@android:color/black"
+            android:layout_marginLeft="5sp"
+            android:layout_marginTop="50sp"
+            android:gravity="left" />
+
+        <TextView
+            android:text="Win Percentage:"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/WinPercentage"
+            android:textColor="@android:color/black"
+            android:layout_marginLeft="5sp"
+            android:layout_marginTop="85sp"
+            android:gravity="left" />
+
+        <TextView
+            android:text="Fastest Win Time:"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/FastestTime"
+            android:textColor="@android:color/black"
+            android:layout_marginLeft="5sp"
+            android:layout_marginTop="120sp"
+            android:gravity="left" />
+
+        <TextView
+            android:text="GWV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/GamesWonValue"
+            android:textColor="@android:color/black"
+            android:layout_marginLeft="250sp"
+            android:layout_marginTop="15sp"
+            android:gravity="left" />
+
+        <TextView
+            android:text="GPV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/GamesPlayedValue"
+            android:textColor="@android:color/black"
+            android:layout_marginLeft="250sp"
+            android:layout_marginTop="50sp"
+            android:gravity="left" />
+
+        <TextView
+            android:text="WPV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/WinPercentValue"
+            android:textColor="@android:color/black"
+            android:layout_marginLeft="250sp"
+            android:layout_marginTop="85sp"
+            android:gravity="left" />
+
+        <TextView
+            android:text="FWV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/FastestValue"
+            android:textColor="@android:color/black"
+            android:layout_marginLeft="250sp"
+            android:layout_marginTop="120sp"
+            android:gravity="left" />
+
+        <LinearLayout
+            android:id="@+id/fullscreen_content_controls"
+            style="?metaButtonBarStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:background="@color/black_overlay"
+            android:orientation="horizontal"
+            tools:ignore="UselessParent">
+
+        </LinearLayout>
+
+        <Button
+            android:text="Return"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/mainScreen"
+            android:layout_marginLeft="50sp"
+            android:layout_marginTop="300sp" />
+
+        <Button
+            android:text="Reset"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/resetButton"
+            android:layout_marginLeft="220sp"
+            android:layout_marginTop="300sp" />
+    </FrameLayout>
+
+</FrameLayout>

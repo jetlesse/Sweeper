@@ -1,6 +1,8 @@
 package apps.sweeper;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -41,9 +43,9 @@ public class MainScreen extends AppCompatActivity {
 
     private boolean mVisible;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+//    @Override
+    protected void onResume() { //(Bundle savedInstanceState) {
+        super.onResume(); //(savedInstanceState);
         setContentView(R.layout.activity_main_screen);
 
         mVisible = true;
@@ -53,20 +55,33 @@ public class MainScreen extends AppCompatActivity {
         TextView tView = (TextView) findViewById(R.id.gameInfo);
         tView.setText("");
         Timer timer = new Timer((TextView) findViewById(R.id.clock));
+        Btn.emptyObjects();
+        Btn.timer = timer;
+        Btn.tv = tView;
+        Btn.sp = getSharedPreferences("Jordan-Sweeper", Context.MODE_PRIVATE);
 
-        GridView gridview = (GridView) findViewById(R.id.gridview);
+        GridView gridview = (GridView) mContentView;
         gridview.setStretchMode(GridView.NO_STRETCH);
         gridview.setNumColumns(9);
         gridview.setColumnWidth(80);
-        gridview.setAdapter(new ImageAdapter(this, 81, tView, timer));
+        gridview.setAdapter(new ImageAdapter(this, 81));
 
         Button stats = (Button) findViewById(R.id.stats);
         stats.setOnClickListener (new View.OnClickListener() {
             public void onClick (View view) {
                 // change to the statistics activity, load statistics from shared preferences file.
+                if (Btn.gameState == 0 || Btn.gameState == 2) {
+                    Btn.gameState = 0;
+                    statScreen();
+                }
             }
         });
 
+    }
+
+    public void statScreen() {
+        Intent intent = new Intent(this, StatisticsScreen.class);
+        startActivity(intent);
     }
 
     @Override

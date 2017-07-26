@@ -16,20 +16,18 @@ import android.widget.TextView;
 public class ImageAdapter extends BaseAdapter {
     private Context mContext;
     private int numButtons;
-    protected TextView tView;
-    protected Timer timer;
 
     // numButtons: the number of buttons to create for the gridview.
     // TODO dynamically fill the gridview with the correct number of buttons.
-    public ImageAdapter(Context c, int n, TextView tv, Timer t) {
+    public ImageAdapter(Context c, int n) {
         numButtons = n;
         mContext = c;
-        tView = tv;
-        timer = t;
     }
 
+    // seems like this is the method that determines how many items to put in the gridview.
+    // may just get it to use Btn.boardSize().
     public int getCount() {
-        return mThumbIds.length;
+        return Btn.boardSize();
     }
 
     public Object getItem(int position) {
@@ -50,15 +48,10 @@ public class ImageAdapter extends BaseAdapter {
             btn = Btn.minePlacements.get(position);
         }
         else {
-            btn = new Btn (pos, tView, timer);
+            btn = new Btn (pos);
             b = new Button(mContext);
             b.setLayoutParams(new GridView.LayoutParams (80, 80));
             b.setPadding(1, 1, 1, 1);
-        }
-
-        if (position == 0) {
-            System.out.println("0 Button: " + b);
-            System.out.println("0 Btn: " + btn);
         }
 
         Btn.buttonNums.put(position, b);
