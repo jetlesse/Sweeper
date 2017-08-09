@@ -137,11 +137,9 @@ public class Btn {
 
 
     private void btnReset (int a) {
-        buttonNums.get(a).setBackgroundResource (R.drawable.square);
-        buttonNums.get(a).setText ("");
-        minePlacements.get(a).numMines = 0;
-        minePlacements.get(a).setIsMine(false);
-        minePlacements.get(a).setState(0);
+        Button b = buttonNums.get(a);
+        Btn btn = minePlacements.get(a);
+        btnReset(btn, b);
     }
 
     public static void btnReset (Btn btn, Button b) {
@@ -160,10 +158,10 @@ public class Btn {
 
         for (int i = 0 ; i < totalMines ; i++) {
             Random ranNum = new Random();
-            boolean cont = true;
-            while (cont) {
+            while (true) {
                 int point = (int) (ranNum.nextFloat() * boardSize());
                 if (point == place) { continue; }
+                if (minePlacements.get(point).getIsMine()) { continue; }
                 boolean adj = false;
                 for (int index: minePlacements.get(place).getAdjIndex()) {
                     if (point == index) { adj = true; }
@@ -171,7 +169,7 @@ public class Btn {
                 if (adj) { continue; }
 
                 minePlacements.get(point).setIsMine(true);
-                cont = false;
+                break;
             }
         }
     }

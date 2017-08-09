@@ -15,12 +15,10 @@ import android.widget.TextView;
 
 public class ImageAdapter extends BaseAdapter {
     private Context mContext;
-    private int numButtons;
 
     // numButtons: the number of buttons to create for the gridview.
     // TODO dynamically fill the gridview with the correct number of buttons.
-    public ImageAdapter(Context c, int n) {
-        numButtons = n;
+    public ImageAdapter(Context c) {
         mContext = c;
     }
 
@@ -72,23 +70,4 @@ public class ImageAdapter extends BaseAdapter {
 
         return b;
     }
-
-    // references to our images
-    // TODO dynamically fill this array with resources when other board sizes are available.
-    private Integer[] mThumbIds = {
-            R.drawable.square, R.drawable.square, R.drawable.square, R.drawable.square, R.drawable.square, R.drawable.square,
-            R.drawable.square, R.drawable.square, R.drawable.square, R.drawable.square, R.drawable.square, R.drawable.square,
-            R.drawable.square, R.drawable.square, R.drawable.square, R.drawable.square, R.drawable.square, R.drawable.square,
-            R.drawable.square, R.drawable.square, R.drawable.square, R.drawable.square, R.drawable.square, R.drawable.square,
-            R.drawable.square, R.drawable.square, R.drawable.square, R.drawable.square, R.drawable.square, R.drawable.square,
-            R.drawable.square, R.drawable.square, R.drawable.square, R.drawable.square, R.drawable.square, R.drawable.square,
-            R.drawable.square, R.drawable.square, R.drawable.square, R.drawable.square, R.drawable.square, R.drawable.square,
-            R.drawable.square, R.drawable.square, R.drawable.square, R.drawable.square, R.drawable.square, R.drawable.square,
-            R.drawable.square, R.drawable.square, R.drawable.square, R.drawable.square, R.drawable.square, R.drawable.square,
-            R.drawable.square, R.drawable.square, R.drawable.square, R.drawable.square, R.drawable.square, R.drawable.square,
-            R.drawable.square, R.drawable.square, R.drawable.square, R.drawable.square, R.drawable.square, R.drawable.square,
-            R.drawable.square, R.drawable.square, R.drawable.square, R.drawable.square, R.drawable.square, R.drawable.square,
-            R.drawable.square, R.drawable.square, R.drawable.square, R.drawable.square, R.drawable.square, R.drawable.square,
-            R.drawable.square, R.drawable.square, R.drawable.square
-    };
 }

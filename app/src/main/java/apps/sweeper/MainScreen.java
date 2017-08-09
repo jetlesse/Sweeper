@@ -10,45 +10,27 @@ import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
 
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
 public class MainScreen extends AppCompatActivity {
-    /**
-     * Whether or not the system UI should be auto-hidden after
-     * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
-     */
-    private static final boolean AUTO_HIDE = true;
-
-    /**
-     * If {@link #AUTO_HIDE} is set, the number of milliseconds to wait after
-     * user interaction before hiding the system UI.
-     */
-    private static final int AUTO_HIDE_DELAY_MILLIS = 3000;
-
-    /**
-     * Some older devices needs a small delay between UI widget updates
-     * and a change of the status and navigation bar.
-     */
-    private static final int UI_ANIMATION_DELAY = 300;
-    private final Handler mHideHandler = new Handler();
     private View mContentView;
     private View mControlsView;
 
-    private boolean mVisible;
 
-//    @Override
-    protected void onResume() { //(Bundle savedInstanceState) {
-        super.onResume(); //(savedInstanceState);
+    @Override
+    protected void onResume() {
+        super.onResume();
         setContentView(R.layout.activity_main_screen);
 
-        mVisible = true;
         mControlsView = findViewById(R.id.fullscreen_content_controls);
         mContentView = findViewById(R.id.gridview);
 
@@ -64,7 +46,7 @@ public class MainScreen extends AppCompatActivity {
         gridview.setStretchMode(GridView.NO_STRETCH);
         gridview.setNumColumns(9);
         gridview.setColumnWidth(80);
-        gridview.setAdapter(new ImageAdapter(this, 81));
+        gridview.setAdapter(new ImageAdapter(this));
 
         Button stats = (Button) findViewById(R.id.stats);
         stats.setOnClickListener (new View.OnClickListener() {

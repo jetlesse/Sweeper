@@ -85,6 +85,7 @@ public class StatisticsScreen extends AppCompatActivity {
                 edit.putInt("Games_Won", 0);
                 edit.putInt("Games_Played", 0);
                 edit.putInt("Fastest_Win", 99);
+                edit.apply();
                 return true;
             }
         });
@@ -94,9 +95,6 @@ public class StatisticsScreen extends AppCompatActivity {
                 rtnMainScreen (view);
             }
         });
-
-
-
     }
 
     public void rtnMainScreen (View view) {
