@@ -61,6 +61,13 @@ public class MainScreen extends AppCompatActivity {
 
     }
 
+    @Override
+    // This will clear any game when the phone is locked or is not the main activity running.
+    protected void onPause() {
+        super.onPause();
+        Btn.minePlacements.get(0).endGame();
+    }
+
     public void statScreen() {
         Intent intent = new Intent(this, StatisticsScreen.class);
         startActivity(intent);

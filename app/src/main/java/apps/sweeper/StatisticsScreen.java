@@ -68,10 +68,10 @@ public class StatisticsScreen extends AppCompatActivity {
         gamesWon.setText(String.format(Locale.getDefault(), "%d", winVal));
         gamesPlayed.setText(String.format(Locale.getDefault(), "%d", playVal));
 
-        winPerc.setText(String.format(Locale.getDefault(), "%.2f", 100 * (float)winVal / (float) Math.max(playVal, 1)));
+        winPerc.setText(String.format(Locale.getDefault(), "%.2f", 100 * (float)winVal / (float)Math.max(playVal, 1)));
 
         int fastTime = shpr.getInt("Fastest_Win", 0);
-        if (fastTime == 99) {
+        if (fastTime >= 99) {
             fastest.setText("N/A");
         } else {
             fastest.setText(String.format(Locale.getDefault(), "%d", fastTime));

@@ -198,8 +198,6 @@ public class Btn {
     }
 
     protected void endGame() {
-        int time = timer.getTheTime();
-
         for (int i = 0 ; i < boardSize() ; i++) {
             btnReset(i);
         }
@@ -252,6 +250,7 @@ public class Btn {
             } else if (state == 1) {
                 state = 0;
                 buttonNums.get(place).setBackgroundResource(R.drawable.square);
+                buttonNums.get(place).setText("");
             }
         }
     }
@@ -324,7 +323,8 @@ public class Btn {
         int fastest = sp.getInt("Fastest_Win", 99);
         SharedPreferences.Editor edit = sp.edit();
         edit.putInt("Games_Won", won + 1);
-        if (timer.getTheTime() < fastest) {
+        // reject any instant wins
+        if (timer.getTheTime() < fastest && timer.getTheTime() != 0) {
             edit.putInt("Fastest_Win", timer.getTheTime());
         }
         edit.apply();
